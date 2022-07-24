@@ -1,59 +1,63 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deus_vult/provider/google_signin.dart';
+import 'package:deus_vult/screens/forgotpassword.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:deus_vult/utils/my_navigator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:deus_vult/provider/google_signin.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
 
-class Register extends StatefulWidget {
-  // const Register({Key? key}) : super(key: key);
+class loginWidget extends StatefulWidget {
+  final VoidCallback onclickedSignup;
 
-  final VoidCallback onclickedSignIn;
-
-  const Register({
+  const loginWidget({
     Key? key,
-    required this.onclickedSignIn,
+    required this.onclickedSignup,
   }) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _loginWidgetState createState() => _loginWidgetState();
 }
 
-class _RegisterState extends State<Register> {
+class _loginWidgetState extends State<loginWidget> {
   bool passwordVisible = false;
-  final TextEditingController mob_numController = TextEditingController();
   final TextEditingController email_idController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController conf_passwordController = TextEditingController();
 
+  @override
   void dispose() {
-    mob_numController.dispose();
     email_idController.dispose();
-    nameController.dispose();
     passwordController.dispose();
-    conf_passwordController.dispose();
 
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Color(0xfff7f6fb),
-      body: SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
             child: Column(
               children: [
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    'assets/images/illustration-2.png',
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
                 Text(
-                  'Registration',
+                  'Login',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -61,7 +65,7 @@ class _RegisterState extends State<Register> {
                   height: 10,
                 ),
                 Text(
-                  "Please provide us your basic details",
+                  "Please provide the required details",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -70,7 +74,7 @@ class _RegisterState extends State<Register> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  height: 28,
+                  height: 40,
                 ),
                 Container(
                   padding: EdgeInsets.all(28),
@@ -80,51 +84,6 @@ class _RegisterState extends State<Register> {
                   ),
                   child: Column(
                     children: [
-                      TextFormField(
-                        keyboardType: TextInputType.name,
-                        controller: nameController,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[a-zA-Z ]")),
-                        ],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Name',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 22,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: mob_numController,
-                        maxLength: 10,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Mobile Number',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: email_idController,
@@ -152,8 +111,6 @@ class _RegisterState extends State<Register> {
                       TextFormField(
                         keyboardType: TextInputType.visiblePassword,
                         controller: passwordController,
-                        obscureText: !passwordVisible,
-                        maxLength: 20,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.deny(RegExp("[ ]")),
                         ],
@@ -169,53 +126,44 @@ class _RegisterState extends State<Register> {
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                passwordVisible = !passwordVisible;
-                              });
-                            },
-                          ),
                         ),
                       ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: conf_passwordController,
-                        maxLength: 20,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.deny(RegExp("[ ]")),
-                        ],
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Confirm Password',
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                      // SizedBox(
-                      //   height: 8,
-                      // ),
                       Row(
                         children: [
-                          SizedBox(
-                            width: 20,
+                          TextButton(
+                            onPressed: () {
+                              // new Forgot Page
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ForgotPasswordPage(),
+                              ));
+                            },
+                            child: Text(
+                              'Forget Password',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black38),
+                            ),
                           ),
+                          SizedBox(
+                            width: 50,
+                          ),
+                          // TextButton(
+                          //   onPressed: () {
+                          //     widget.onclickedSignup;
+
+                          //     // MyNavigator.goToRegistration(context);
+                          //   },
+                          //   child: Text(
+                          //     'Sign Up',
+                          //     textAlign: TextAlign.right,
+                          //     style: TextStyle(
+                          //         fontSize: 14,
+                          //         fontWeight: FontWeight.bold,
+                          //         color: Colors.black38),
+                          //   ),
+                          // ),
                           RichText(
                             text: TextSpan(
                               style: TextStyle(
@@ -226,8 +174,8 @@ class _RegisterState extends State<Register> {
                               children: [
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = widget.onclickedSignIn,
-                                  text: 'Already have account ? SignIn',
+                                    ..onTap = widget.onclickedSignup,
+                                  text: 'SignUp',
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -239,48 +187,19 @@ class _RegisterState extends State<Register> {
                         ],
                       ),
                       SizedBox(
-                        height: 12,
-                      ),
-                      SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (nameController.text.toString().length < 3) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    "Please enter atleast 3 characters in name"),
-                              ));
-                            } else if (mob_numController.text
-                                    .toString()
-                                    .length <
-                                10) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    "Please enter a valid 10 digit mobile number"),
-                              ));
-                            } else if (passwordController.text
-                                    .toString()
-                                    .length <
-                                8) {
+                            if (passwordController.text.toString().length < 8) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content: Text(
                                     "Please enter a mixed password of atleast 8 characters"),
                               ));
-                            } else if (passwordController.text.toString() !=
-                                conf_passwordController.text.toString()) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    "Password and confirm password does not match"),
-                              ));
                             } else {
-                              //email verification page
+                              //SignIn method firebase auth
                               //MyNavigator.goToOTP(context);
-
-                              signUp();
+                              signIn();
                             }
                           },
                           style: ButtonStyle(
@@ -298,7 +217,7 @@ class _RegisterState extends State<Register> {
                           child: Padding(
                             padding: EdgeInsets.all(14.0),
                             child: Text(
-                              'Send OTP',
+                              'Sign In',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -322,6 +241,7 @@ class _RegisterState extends State<Register> {
                       FloatingActionButton.extended(
                         onPressed: () {
                           //GoogleSignIn().signIn();
+
                           final provider = Provider.of<GoogleSignInProvider>(
                               context,
                               listen: false);
@@ -333,7 +253,7 @@ class _RegisterState extends State<Register> {
                           height: 32,
                           width: 32,
                         ),
-                        label: Text('Sign Up with Google'),
+                        label: Text('Sign In with Google'),
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
                       )
@@ -344,11 +264,9 @@ class _RegisterState extends State<Register> {
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Future signUp() async {
+  Future signIn() async {
     // showDialog(
     //   context: context,
     //   barrierDismissible: false,
@@ -356,34 +274,20 @@ class _RegisterState extends State<Register> {
     // );
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email_idController.text.trim(),
         password: passwordController.text.trim(),
       );
-      //     .then((value) {
-      //   FirebaseFirestore.instance
-      //       .collection('Users')
-      //       .doc(value.user!.uid)
-      //       .set({
-      //     "name": nameController.text.trim(),
-      //     "email": value.user!.email,
-      //     "phonenumber": mob_numController.text.trim(),
-      //     "password": passwordController.text.trim(),
-      //   });
-      // });
-      final user = FirebaseAuth.instance.currentUser!;
-
-      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        "name": nameController.text.trim(),
-        "email": user.email,
-        "phonenumber": mob_numController.text.trim(),
-        "password": passwordController.text.trim(),
-      });
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
-        case "email-already-in-use":
-          errorMessage = "The email address is already exits.";
+        case "ERROR_WRONG_PASSWORD":
+        case "wrong-password":
+          errorMessage = "Wrong email/password combination.";
+          break;
+        case "ERROR_USER_NOT_FOUND":
+        case "user-not-found":
+          errorMessage = "No user found with this email.";
           break;
         case "ERROR_USER_DISABLED":
         case "user-disabled":
@@ -408,6 +312,9 @@ class _RegisterState extends State<Register> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("$errorMessage"),
       ));
+
+      //print(e);
+
     }
 
     //navigator of context not working

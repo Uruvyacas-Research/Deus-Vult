@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "683780166566",
+    "project_id": "vultapp-41f77",
+    "storage_bucket": "vultapp-41f77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683780166566:android:50d242598c7f959ba87567",
+        "android_client_info": {
+          "package_name": "com.example.deus_vult"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683780166566-qb8on021gvajdn870aof0hi4rc8h8vv6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.deus_vult",
+            "certificate_hash": "01c5929a8a5d31af80ebc0a75ef0583063f0f888"
+          }
+        },
+        {
+          "client_id": "683780166566-4v4liqi9jn7jru1gv96s1flhbh2ls73j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFgpOViXmjMOsocyxE-awbKWfAvRGR6gM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683780166566-4v4liqi9jn7jru1gv96s1flhbh2ls73j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

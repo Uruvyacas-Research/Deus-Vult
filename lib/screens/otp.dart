@@ -2,7 +2,7 @@ import 'package:deus_vult/utils/my_navigator.dart';
 import 'package:flutter/material.dart';
 
 class OTP extends StatefulWidget {
-  const OTP({Key key}) : super(key: key);
+  const OTP({Key? key}) : super(key: key);
 
   @override
   _OTPState createState() => _OTPState();
@@ -133,7 +133,7 @@ class _OTPState extends State<OTP> {
     );
   }
 
-  Widget _textFieldOTP({bool first, last}) {
+  Widget _textFieldOTP({bool? first, last}) {
     return Container(
       height: 70,
       width: 50,

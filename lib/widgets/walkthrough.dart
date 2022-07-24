@@ -20,8 +20,8 @@ class Walkthrough extends StatefulWidget {
 
 class WalkthroughState extends State<Walkthrough>
     with SingleTickerProviderStateMixin {
-  Animation animation;
-  AnimationController animationController;
+  late Animation animation;
+  late AnimationController animationController;
 
   @override
   void initState() {
